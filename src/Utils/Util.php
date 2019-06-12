@@ -46,9 +46,9 @@ class Util {
     public function routing_options($routing_name, $routing_type){
         if($routing_type == 'json'){
             pg_prepare($this->dbconn, "get_json", "SELECT json FROM json_uploads WHERE url = $1");
-            $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_json", array($routing_name['name'])));
+            $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_json", array($routing_name)));
 
-            $reponse_array = [
+            $response_array = [
                 'fh_enabled' => true,
                 'json' => $database_array['json'],
             ];
@@ -112,7 +112,7 @@ class Util {
     {
         $domain_regex = preg_replace("/^([a-zA-Z0-9].*\.)?([a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z.]{2,})$/", '$2', $domain);
 
-        pg_prepare($this->dbconn, "get_domain_authorization", "SELECT *, COUNT(*) from domains WHERE domain_name = $1 GROUP BY id, domain_name, official, wildcard, public, verified, verification_hash, user_id, api_key, bucket");
+        pg_prepare($this->dbconn, "get_domain_authorization", "SELECT *, COUNT(*) from domains WHERE domain_name = $1 AND verified = true GROUP BY id, domain_name, official, wildcard, public, verified, verification_hash, user_id, api_key, bucket");
         $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_domain_authorization", array($domain_regex)));
 
         if($database_array['count'] > 0){
