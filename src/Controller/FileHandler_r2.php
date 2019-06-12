@@ -53,6 +53,10 @@ class FileHandler_r2 extends AbstractController {
                         return new Response($this->page_renderer->render_video($routing_options));
                     }elseif($routing_type == 'short_url'){
                         return new Response($this->page_renderer->render_short_url($routing_options));
+                    }elseif($routing_type == 'json'){
+                        $response = new Response($routing_options['json']);
+                        $response->headers->set('Content-Type', 'application/json');
+                        return $response;
                     }elseif($routing_type == 'none'){
                         return new Response($this->page_renderer->render_none($routing_options));
                     }

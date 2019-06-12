@@ -35,6 +35,8 @@ class Util {
             return 'video';
         }elseif(mb_substr($routing_name['name'], 0, 2) == '~.'){
             return 'short_url';
+        }elseif(mb_substr($routing_name['name'], 0, 6) == '~json.'){
+            return 'json';
         }else{
             return 'none';
         }
@@ -42,7 +44,17 @@ class Util {
 
     /* Function to get the renderer options for the routing name/type */
     public function routing_options($routing_name, $routing_type){
-        if($routing_type == 'short_url'){
+        if($routing_type == 'json'){
+            pg_prepare($this->dbconn, "get_json", "SELECT json FROM json_uploads WHERE url = $1");
+            $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_json", array($routing_name['name'])));
+
+            $reponse_array = [
+                'fh_enabled' => true,
+                'json' => $database_array['json'],
+            ];
+
+            return $response_array;
+        }elseif($routing_type == 'short_url'){
 
             pg_prepare($this->dbconn, "get_short_url", "SELECT * FROM shortened_urls WHERE short_name = $1");
             $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_short_url", array($routing_name)));
