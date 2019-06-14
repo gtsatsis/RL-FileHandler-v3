@@ -80,7 +80,7 @@ class Util {
 
         }else{
 
-            pg_prepare($this->dbconn, "get_routed_file", "SELECT * FROM files WHERE filename = $1");
+            pg_prepare($this->dbconn, "get_routed_file", "SELECT * FROM files WHERE filename = $1 AND deleted IS NOT TRUE");
             $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_routed_file", array($routing_name)));
 
             pg_prepare($this->dbconn, "get_user_by_routed_file", "SELECT * FROM users WHERE id = $1");
