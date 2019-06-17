@@ -33,9 +33,9 @@ class FileHandler_r2 extends AbstractController {
     
     public function serve_file(Request $request, $routing_name)
     {
-        $routing_type = $this->util->routing_type($routing_name);
-        $routing_options = $this->util->routing_options($routing_name, $routing_type);
         $domain_authorization = $this->util->domain_authorization($_SERVER['HTTP_HOST']);
+        $routing_type = $this->util->routing_type($routing_name);
+        $routing_options = $this->util->routing_options($routing_name, $routing_type, $domain_authorization['bucket']);
 
         if($domain_authorization['authorized']){
 

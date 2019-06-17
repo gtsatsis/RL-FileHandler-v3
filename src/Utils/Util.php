@@ -43,7 +43,7 @@ class Util {
     }
 
     /* Function to get the renderer options for the routing name/type */
-    public function routing_options($routing_name, $routing_type){
+    public function routing_options($routing_name, $routing_type, $bucket){
         if($routing_type == 'json'){
             pg_prepare($this->dbconn, "get_json", "SELECT json FROM json_uploads WHERE url = $1");
             $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_json", array($routing_name)));
@@ -80,8 +80,8 @@ class Util {
 
         }else{
 
-            pg_prepare($this->dbconn, "get_routed_file", "SELECT * FROM files WHERE filename = $1 AND deleted IS NOT TRUE");
-            $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_routed_file", array($routing_name)));
+            pg_prepare($this->dbconn, "get_routed_file", "SELECT * FROM files WHERE filename = $1 AND deleted IS NOT TRUE AND bucket = $2");
+            $database_array = pg_fetch_array(pg_execute($this->dbconn, "get_routed_file", array($routing_name, $bucket)));
 
             pg_prepare($this->dbconn, "get_user_by_routed_file", "SELECT * FROM users WHERE id = $1");
             $database_array_user = pg_fetch_array(pg_execute($this->dbconn, "get_user_by_routed_file", array($database_array['user_id'])));
